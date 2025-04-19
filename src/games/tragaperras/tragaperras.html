@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tragaperras</title>
+  <script src="../../libraries/tailwindcss.js"></script>
+  <style scoped>
+    .animate-spin-slow {
+      animation: spin 0.3s linear infinite;
+    }
+
+    @keyframes spin {
+      from {
+        transform: translateY(-5px);
+      }
+
+      to {
+        transform: translateY(5px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app1"></div>
+  <script src="../../libraries/vue.global.prod.js"></script>
+  <script src="./tragaperras.js"></script>
+</body>
+</html>
