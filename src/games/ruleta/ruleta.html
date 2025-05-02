@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dados</title>
+  <script src="../../libraries/tailwindcss.js"></script>
+  <style scoped>
+  .sector {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+    }
+
+.sector-1  { transform: rotate(36deg); }
+.sector-2  { transform: rotate(72deg); }
+.sector-3  { transform: rotate(108deg); }
+.sector-4  { transform: rotate(144deg); }
+.sector-5  { transform: rotate(180deg); }
+.sector-6  { transform: rotate(216deg); }
+.sector-7  { transform: rotate(252deg); }
+.sector-8  { transform: rotate(288deg); }
+.sector-9  { transform: rotate(324deg); }
+.sector-10 { transform: rotate(360deg); }
+
+.sector div {
+  transform-origin: left center;
+}
+  </style>
+</head>
+
+<body>
+  <div id="app3"></div>
+  <script src="../../libraries/vue.global.prod.js"></script>
+  <script src="./ruleta.js"></script>
+</body>
+</html>
