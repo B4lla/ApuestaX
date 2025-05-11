@@ -1,27 +1,40 @@
+import { PaginaLogin } from './pages/login.js';
+import { PaginaInicio } from './pages/home.js';
+
 const app = Vue.createApp({
     template: `
-        <login-page v-if="!isLoggedIn" @login-success="isLoggedIn = true" />
-        <home-page v-else @logout="isLoggedIn = false" />
+        <pagina-login 
+          v-if="!estaLogueado" 
+          @inicio-exitoso="manejarInicioSesion" 
+        />
+        <pagina-inicio 
+          v-else 
+          @cerrar-sesion="manejarCierreSesion" 
+        />
     `,
     data() {
         return {
-            isLoggedIn: false,
-            loginMail: "admin@admin.com",
-            loginPassword: "admin",
+            // estado de login guardado en localStorage para persistencia
+            estaLogueado: localStorage.getItem('estaLogueado') === 'true'
+        };
+    },
+   methods: {
+        // cambia al estado logueado y guarda en localStorage
+        manejarInicioSesion() {
+            this.estaLogueado = true;
+            localStorage.setItem('estaLogueado', 'true');
+        },
+        // cambia al estado deslogueado y elimina de localStorage
+        manejarCierreSesion() {
+            this.estaLogueado = false;
+            localStorage.removeItem('estaLogueado');
         }
     },
-
-    methods: {
-        
-
-    },
-
-
+    // componentes disponibles en esta app
     components: {
-        LoginPage,
-        HomePage,
-    },
+        PaginaLogin,
+        PaginaInicio
+    }
 });
 
-
-app.mount("#app");
+app.mount('#appMain');

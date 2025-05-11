@@ -1,296 +1,245 @@
+// importamos el componente navbar para la barra de navegacion superior
+import { Navbar } from '../../components/navbar.js';
+
+// obtenemos la funcion createApp de Vue
 const { createApp } = Vue;
 
+// creamos la aplicacion Vue
 const app = createApp({
-    template: `
-        <!-- Estructura HTML -->
-        <div class="min-h-screen bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex flex-col">
-            <!-- Barra de Navegación -->
-            <nav class="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-md p-4 border-b border-gray-800 flex items-center justify-between z-50">
-                <div class="flex items-center">
-                    <div class="bg-yellow-500 w-8 h-8 flex items-center justify-center rounded">
-                        <span class="text-black font-bold">C</span>
-                    </div>
-                    <span class="ml-2 font-bold text-xl">CardVerse</span>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="text-gray-300 hover:text-white text-sm">Iniciar Sesión</button>
-                    <button class="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-4 py-1 rounded text-sm">Registrarse</button>
-                </div>
-            </nav>
-
-            <!-- Contenido Principal -->
-            <div class="flex-1 flex flex-col items-center justify-center p-6 mt-16">
-                <!-- Máquina Tragaperras -->
-                <div class="bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-6 w-full max-w-2xl">
-                    <!-- Saldo y Apuesta -->
-                    <div class="flex justify-between mb-6">
-                        <div class="bg-black bg-opacity-70 rounded-lg p-3">
-                            <div class="text-gray-400 text-sm">Saldo</div>
-                            <div class="text-yellow-500 text-2xl font-bold">{{ saldo }}€</div>
-                        </div>
-                        <div class="bg-black bg-opacity-70 rounded-lg p-3">
-                            <div class="text-gray-400 text-sm">Apuesta</div>
-                            <div class="text-yellow-500 text-2xl font-bold">{{ apuesta }}€</div>
-                        </div>
-                        <div class="bg-black bg-opacity-70 rounded-lg p-3">
-                            <div class="text-gray-400 text-sm">Ganancia</div>
-                            <div class="text-yellow-500 text-2xl font-bold">{{ ganancia }}€</div>
-                        </div>
-                    </div>
-
-                    <!-- Rodillos -->
-                    <div class="bg-black rounded-lg p-4 mb-6">
-                        <div class="flex justify-center gap-4">
-                            <div 
-                                v-for="(rodillo, index) in rodillos" 
-                                :key="index" 
-                                class="w-24 h-24 md:w-32 md:h-32 bg-gray-800 rounded-lg flex items-center justify-center text-5xl"
-                                :class="{ 'animate-spin-slow': girando }"
-                            >
-                                {{ rodillo }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Mensaje de Resultado -->
-                    <div 
-                        v-if="mensajeResultado" 
-                        class="bg-black bg-opacity-70 rounded-lg p-4 mb-6 text-center"
-                        :class="{ 'text-yellow-500': esGanador, 'text-white': !esGanador }"
-                    >
-                        <p class="text-xl font-bold">{{ mensajeResultado }}</p>
-                    </div>
-
-                    <!-- Tabla de Premios -->
-                    <div class="bg-black bg-opacity-50 rounded-lg p-6 mb-6">
-                        <h3 class="text-lg font-bold mb-4 text-center">Tabla de Premios</h3>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">🎰 🎰 🎰</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x100</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">7️⃣ 7️⃣ 7️⃣</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x50</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">💎 💎 💎</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x25</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">🍇 🍇 🍇</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x15</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">🍊 🍊 🍊</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x10</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">🍋 🍋 🍋</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x5</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">🍒 🍒 🍒</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x3</div>
-                            </div>
-                            <div class="bg-black bg-opacity-70 rounded-lg p-3 text-center">
-                                <div class="flex justify-center mb-2">
-                                    <span class="text-2xl">🍒 🍋 🍊</span>
-                                </div>
-                                <div class="text-yellow-500 font-bold">x2</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Controles -->
-                    <div class="flex flex-col md:flex-row gap-4 justify-between">
-                        <div class="flex gap-2">
-                            <button 
-                                @click="cambiarApuesta(-1)" 
-                                class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
-                                :disabled="apuesta <= 1 || girando"
-                                :class="{ 'opacity-50 cursor-not-allowed': apuesta <= 1 || girando }"
-                            >
-                                -
-                            </button>
-                            <button 
-                                @click="cambiarApuesta(1)" 
-                                class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
-                                :disabled="apuesta >= 10 || girando"
-                                :class="{ 'opacity-50 cursor-not-allowed': apuesta >= 10 || girando }"
-                            >
-                                +
-                            </button>
-                        </div>
-                        
-                        <button 
-                            @click="girarRodillos" 
-                            class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded-lg text-lg"
-                            :disabled="girando || saldo < apuesta"
-                            :class="{ 'opacity-50 cursor-not-allowed': girando || saldo < apuesta }"
-                        >
-                            {{ girando ? 'Girando...' : 'Girar' }}
-                        </button>
-                        
-                        <button 
-                            @click="apostarMaximo" 
-                            class="bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg"
-                            :disabled="girando || saldo < 10"
-                            :class="{ 'opacity-50 cursor-not-allowed': girando || saldo < 10 }"
-                        >
-                            Apuesta Máx
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `,
-    data() {
-        // Inicializa las variables de la app
-        return {
-            mensajeResultado: null,
-            saldo: 100,
-            apuesta: 1,
-            ganancia: 0,
-            rodillos: ["🎰", "🎰", "🎰"],
-            girando: false,
-            esGanador: false,
-            simbolos: ["🍒", "🍋", "🍊", "🍇", "💎", "7️⃣", "🎰"]
-        };
+  // registramos el componente Navbar
+  components: {
+    Navbar
+  },
+  // datos iniciales del juego
+  data() {
+    return {
+      saldo: 100,
+      apuesta: 1,
+      girando: false,
+      mensajeResultado: "Selecciona tu apuesta y gira la tragaperras",
+      esGanador: false,
+      // array de rodillos con su simbolo y estado
+      rodillos: [
+        { simbolo: "🍒", girando: false },
+        { simbolo: "🍋", girando: false },
+        { simbolo: "🍉", girando: false }
+      ],
+      // simbolos que pueden aparecer en los rodillos
+      simbolos: ["🍒", "🍋", "🍉", "🍇", "🍊", "7️⃣"],
+      // guarda los indices de los rodillos ganadores para resaltarlos
+      lineasGanadoras: []
+    };
+  },
+  methods: {
+    // metodo principal que inicia el giro de la tragaperras
+    girarTragaperras() {
+      if (this.girando || this.saldo < this.apuesta) return;
+      
+      this.girando = true;
+      this.esGanador = false;
+      this.lineasGanadoras = [];
+      this.mensajeResultado = "Girando...";
+      
+      // Reducir el saldo por la apuesta
+      this.saldo -= this.apuesta;
+      
+      // Marcar todos los rodillos como girando
+      this.rodillos.forEach(rodillo => {
+        rodillo.girando = true;
+      });
+      
+      // Detener los rodillos secuencialmente con diferentes tiempos
+      this.detenerRodilloConRetraso(0, 800);
+      this.detenerRodilloConRetraso(1, 1400);
+      this.detenerRodilloConRetraso(2, 2000);
+      
+      // Calcular resultado después de que todos los rodillos se detengan
+      setTimeout(() => {
+        this.calcularGanancia();
+        this.girando = false;
+      }, 2200);
     },
-    // Métodos de la app
-    methods: {
-        // Genera un símbolo aleatorio para los rodillos
-        // y lo asigna a cada rodillo
-        girarRodillos() {
-            if (this.girando) return; // Si ya está girando no se puede girar de nuevo
-            
-            if (this.saldo < this.apuesta) { // Si no hay suficiente saldo
-                this.mostrarMensaje("No tienes suficiente saldo para realizar esta apuesta.", false);
-                return;
-            }
-            // Si hay saldo, comienza el giro
-            this.girando = true;
-            this.mensajeResultado = null;
-            this.saldo -= this.apuesta;
-            this.ganancia = 0;
-            
-            // Simulación visual de giro, es decir, cambia los símbolos cada 100ms
-            const intervalId = setInterval(() => {
-                this.rodillos = this.rodillos.map(() => this.generarSimboloAleatorio());
-            }, 100);
-            
-            // Detener el giro después de un tiempo y mostrar el resultado final
-            setTimeout(() => {
-                clearInterval(intervalId);
-                
-                // Generar resultado final
-                const resultadoFinal = [
-                    this.generarSimboloAleatorio(),
-                    this.generarSimboloAleatorio(),
-                    this.generarSimboloAleatorio()
-                ];
-                
-                this.rodillos = resultadoFinal;
-                this.calcularGanancia();
-                this.girando = false;
-            }, 2000);
-        },
-        // Genera un símbolo aleatorio de la lista de símbolos y lo devuelve
-        generarSimboloAleatorio() {
-            const indice = Math.floor(Math.random() * this.simbolos.length);
-            return this.simbolos[indice];
-        },
-        // Calcula la ganancia en función de los símbolos obtenidos
-        // y actualiza el saldo
-        calcularGanancia() {
-            const [r1, r2, r3] = this.rodillos;
-            
-            if (r1 === r2 && r2 === r3) { //si hay 3 iguales hay premio
-                const premios = { //tabla con el valor del multiplicador cada premio
-                    "🍒": 3,
-                    "🍋": 5,
-                    "🍊": 10,
-                    "🍇": 15,
-                    "💎": 25,
-                    "7️⃣": 50,
-                    "🎰": 100
-                };
-                
-                const multiplicador = premios[r1]; //multiplicador del premio
-                this.ganancia = this.apuesta * multiplicador; //La ganancia
-                this.saldo += this.ganancia; //se suma al saldo
-                this.mostrarMensaje(`¡Felicidades! Has ganado ${this.ganancia}€ (x${multiplicador})`, true);
-            } else if (this.esCombinacionFrutas(r1, r2, r3)) { //si hay combinación de frutas
-                // Combinación de frutas diferentes
-                this.ganancia = this.apuesta * 2;
-                this.saldo += this.ganancia;
-                this.mostrarMensaje(`¡Combinación de frutas! Has ganado ${this.ganancia}€ (x2)`, true);
-            } else { //si no hay premio
-                this.ganancia = 0;
-                this.mostrarMensaje("Inténtalo de nuevo", false);
-            }
-            
-            // Comprobar si el saldo es 0
-            if (this.saldo === 0) {
-                setTimeout(() => {
-                    if (confirm('¡Te has quedado sin saldo! ¿Quieres recargar 100€?')) {
-                        this.saldo = 100;
-                    }
-                }, 500);
-            }
-        },
-        esCombinacionFrutas(s1, s2, s3) {
-            const frutas = ["🍒", "🍋", "🍊", "🍇"];
-            // Verificar que todos son frutas pero no son iguales
-            return frutas.includes(s1) && frutas.includes(s2) && frutas.includes(s3) && 
-                   !(s1 === s2 && s2 === s3);
-        },
-        // Cambia la apuesta en función del botón presionado
-        cambiarApuesta(cambio) {
-            if (this.girando) return; //Si está girando no se puede cambiar la apuesta
-            
-            const nuevaApuesta = this.apuesta + cambio;
-            if (nuevaApuesta >= 1 && nuevaApuesta <= 10) {
-                this.apuesta = nuevaApuesta;
-            }
-        },
-        // Cambia la apuesta a 10 si el saldo es suficiente
-        // y no está girando
-        apostarMaximo() {
-            if (this.girando || this.saldo < 10) return;
-            this.apuesta = 10;
-        },
-        //cambia el mensaje de resultado según los datos que recibe
-        mostrarMensaje(mensaje, esGanador) {
-            this.mensajeResultado = mensaje;
-            this.esGanador = esGanador;
+    
+    // detiene un rodillo especifico despues de un tiempo
+    detenerRodilloConRetraso(indice, retraso) {
+      setTimeout(() => {
+        // Generar un símbolo aleatorio
+        const simboloAleatorio = this.simbolos[Math.floor(Math.random() * this.simbolos.length)];
+        this.rodillos[indice].simbolo = simboloAleatorio;
+        this.rodillos[indice].girando = false;
+      }, retraso);
+    },
+    
+    // calcula si hay combinaciones ganadoras y la ganancia correspondiente
+    calcularGanancia() {
+      const simbolos = this.rodillos.map(r => r.simbolo);
+      
+      let ganancia = 0;
+      let mensaje = "";
+      
+      // Comprobar si hay tres iguales (premio mayor)
+      if (simbolos[0] === simbolos[1] && simbolos[1] === simbolos[2]) {
+        this.lineasGanadoras = [0, 1, 2];
+        
+        // Comprobar si es un premio especial (7️⃣)
+        if (simbolos[0] === "7️⃣") {
+          ganancia = this.apuesta * 20;
+          mensaje = `¡JACKPOT! Tres 7️⃣. Ganaste ${ganancia}€`;
+        } else {
+          ganancia = this.apuesta * 5;
+          mensaje = `¡Tres ${simbolos[0]}! Ganaste ${ganancia}€`;
         }
+      }
+      // Comprobar si hay dos iguales (premio menor)
+      else if (simbolos[0] === simbolos[1] || simbolos[1] === simbolos[2] || simbolos[0] === simbolos[2]) {
+        ganancia = this.apuesta * 2;
+        
+        if (simbolos[0] === simbolos[1]) {
+          this.lineasGanadoras = [0, 1];
+          mensaje = `¡Dos ${simbolos[0]}! Ganaste ${ganancia}€`;
+        } else if (simbolos[1] === simbolos[2]) {
+          this.lineasGanadoras = [1, 2];
+          mensaje = `¡Dos ${simbolos[1]}! Ganaste ${ganancia}€`;
+        } else {
+          this.lineasGanadoras = [0, 2];
+          mensaje = `¡Dos ${simbolos[0]}! Ganaste ${ganancia}€`;
+        }
+      }
+      // Sin coincidencias (perdiste)
+      else {
+        mensaje = "Sin coincidencias. Inténtalo de nuevo.";
+      }
+      
+      // Actualizar saldo y mensaje
+      if (ganancia > 0) {
+        this.saldo += ganancia;
+        this.esGanador = true;
+      }
+      
+      this.mostrarMensaje(mensaje, this.esGanador);
     },
-    mounted() { //Mensaje que aparece en la app al cargar y luego se sustituye
-        this.mensajeResultado = "¡Haz girar los rodillos para comenzar!";
+    
+    // aumenta o disminuye la cantidad apostada
+    cambiarApuesta(cambio) {
+      const nuevaApuesta = this.apuesta + cambio;
+      if (nuevaApuesta >= 1 && nuevaApuesta <= this.saldo) {
+        this.apuesta = nuevaApuesta;
+      }
+    },
+    
+    // actualiza el mensaje de resultado y si es ganador
+    mostrarMensaje(mensaje, esGanador) {
+      this.mensajeResultado = mensaje;
+      this.esGanador = esGanador;
+    },
+    
+    // navega a la pagina principal
+    volverAlInicio() {
+      window.location.href = "../../index.html";
+    },
+    
+    // cierra la sesion y vuelve a la pagina principal
+    cerrarSesion() {
+      localStorage.removeItem('estaLogueado');
+      window.location.href = "../../index.html";
     }
+  },
+  template: `
+    <div class="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white">
+      <!-- Navbar componente -->
+      <navbar 
+        :show-nav-links="false"
+        :show-search="false"
+        pagina-actual="juego"
+        nombre-juego="Tragaperras"
+        @cerrar-sesion="cerrarSesion"
+        @volver-inicio="volverAlInicio"
+      />
+
+      <!-- Contenido Principal -->
+      <div class="pt-24 pb-12 px-4 md:px-8 min-h-screen flex flex-col items-center justify-center">
+        <div class="container mx-auto max-w-lg">
+          <!-- Panel de juego -->
+          <div class="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-amber-500/30 p-6 shadow-lg">
+            <h1 class="text-2xl font-bold text-center mb-6">Tragaperras</h1>
+            
+            <!-- Saldo y Apuesta -->
+            <div class="flex justify-between mb-8">
+              <div class="bg-black/50 rounded-lg p-3">
+                <div class="text-gray-400 text-sm">Saldo</div>
+                <div class="text-amber-500 text-2xl font-bold">{{ saldo }}€</div>
+              </div>
+              <div class="bg-black/50 rounded-lg p-3">
+                <div class="text-gray-400 text-sm">Apuesta</div>
+                <div class="flex items-center justify-between">
+                  <button 
+                    @click="cambiarApuesta(-1)" 
+                    class="bg-amber-500/20 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-amber-500/50 transition-colors"
+                    :disabled="apuesta <= 1 || girando"
+                    :class="{ 'opacity-50 cursor-not-allowed': apuesta <= 1 || girando }"
+                  >-</button>
+                  <div class="text-amber-500 text-2xl font-bold mx-2">{{ apuesta }}€</div>
+                  <button 
+                    @click="cambiarApuesta(1)" 
+                    class="bg-amber-500/20 text-white w-6 h-6 rounded-full flex items-center justify-center hover:bg-amber-500/50 transition-colors"
+                    :disabled="apuesta >= saldo || girando"
+                    :class="{ 'opacity-50 cursor-not-allowed': apuesta >= saldo || girando }"
+                  >+</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Máquina Tragaperras -->
+            <div class="bg-black/50 rounded-xl p-6 mb-6">
+              <div class="bg-gray-900 rounded-lg p-4 flex justify-around items-center border-2 border-amber-500/30">
+                <div 
+                  v-for="(rodillo, index) in rodillos" 
+                  :key="index" 
+                  class="w-20 h-24 bg-white/5 rounded-lg flex items-center justify-center text-4xl"
+                  :class="{
+                    'animate-pulse': rodillo.girando,
+                    'border-2 border-amber-500': lineasGanadoras.includes(index)
+                  }"
+                >
+                  {{ rodillo.girando ? '?' : rodillo.simbolo }}
+                </div>
+              </div>
+              <div class="mt-4 flex justify-center">
+                <div class="flex items-center bg-amber-500/10 rounded-lg px-3 py-1 text-sm">
+                  <span class="text-amber-400">💰 Línea Completa: x5 &nbsp; | &nbsp; Dos Iguales: x2 &nbsp; | &nbsp; Tres 7️⃣: x20</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mensaje de Resultado -->
+            <div 
+              class="bg-black/50 rounded-xl p-4 mb-6 text-center"
+              :class="{ 'border border-amber-500/50': esGanador }"
+            >
+              <p class="text-xl font-bold" :class="esGanador ? 'text-amber-500' : 'text-white'">{{ mensajeResultado }}</p>
+            </div>
+
+            <!-- Botón Girar -->
+            <button 
+              @click="girarTragaperras" 
+              class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-4 rounded-lg transition-colors text-lg"
+              :disabled="girando || saldo < apuesta"
+              :class="{ 'opacity-50 cursor-not-allowed': girando || saldo < apuesta }"
+            >
+              {{ girando ? 'Girando...' : 'Girar' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
 });
 
-// Esto monta la app en el html
+// Montar la app en el html cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
-    if (document.getElementById('app1')) {
-        app.mount("#app1");
+    if (document.getElementById('app4')) {
+        app.mount("#app4");
     } else {
-        console.error("No se encontró el elemento con id 'app1'");
+        console.error("No se encontró el elemento con id 'app4'");
     }
 });

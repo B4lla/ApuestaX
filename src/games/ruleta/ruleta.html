@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ruleta</title>
+  <link rel="icon" type="image/png" href="../../../public/assets/logo.png" />
   <script src="../../libraries/tailwindcss.js"></script>
-  <!-- Método para girar la ruleta segun la rotación, de 36 en 36 porque son 10 sectores-->
   <style scoped>
   .sector {
   position: absolute;
@@ -14,16 +14,16 @@
   height: 100%;
     }
 
-  .sector-1  { transform: rotate(36deg); }
-  .sector-2  { transform: rotate(72deg); }
-  .sector-3  { transform: rotate(108deg); }
-  .sector-4  { transform: rotate(144deg); }
-  .sector-5  { transform: rotate(180deg); }
-  .sector-6  { transform: rotate(216deg); }
-  .sector-7  { transform: rotate(252deg); }
-  .sector-8  { transform: rotate(288deg); }
-  .sector-9  { transform: rotate(324deg); }
-  .sector-10 { transform: rotate(360deg); }
+.sector-1  { transform: rotate(36deg); }
+.sector-2  { transform: rotate(72deg); }
+.sector-3  { transform: rotate(108deg); }
+.sector-4  { transform: rotate(144deg); }
+.sector-5  { transform: rotate(180deg); }
+.sector-6  { transform: rotate(216deg); }
+.sector-7  { transform: rotate(252deg); }
+.sector-8  { transform: rotate(288deg); }
+.sector-9  { transform: rotate(324deg); }
+.sector-10 { transform: rotate(360deg); }
 
 .sector div {
   transform-origin: left center;
@@ -32,9 +32,8 @@
 </head>
 
 <body>
-  <!-- Montar el vue-->
   <div id="app3"></div>
   <script src="../../libraries/vue.global.prod.js"></script>
-  <script src="./ruleta.js"></script>
+  <script type="module" src="./ruleta.js"></script>
 </body>
 </html>
