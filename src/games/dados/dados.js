@@ -2,6 +2,22 @@ const { createApp } = Vue;
 
 const app = createApp({
 template: `
+  <!-- Estructura HTML -->
+        <div class="min-h-screen bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex flex-col">
+            <!-- Barra de Navegación -->
+            <nav class="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-md p-4 border-b border-gray-800 flex items-center justify-between z-50">
+                <div class="flex items-center">
+                    <div class="bg-yellow-500 w-8 h-8 flex items-center justify-center rounded">
+                        <span class="text-black font-bold">C</span>
+                    </div>
+                    <span class="ml-2 font-bold text-xl">CardVerse</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-300 hover:text-white text-sm">Iniciar Sesión</button>
+                    <button class="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-4 py-1 rounded text-sm">Registrarse</button>
+                </div>
+            </nav>
+
   <div class="min-h-screen bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex flex-col items-center justify-center p-4">
     <!-- Juego de Dados -->
     <div class="bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-6 w-full max-w-md">
@@ -46,7 +62,7 @@ template: `
       <div class="bg-black bg-opacity-70 rounded-lg p-4 mb-6 text-center">
         <p class="text-sm">
           <span class="font-bold">Reglas:</span> 
-          Par (x2) | Trío (x5) | Doble 6 (x10)
+          Par (x2) | Par y Mayor de 3 (x5) | Doble 6 (x10)
         </p>
       </div>
 
@@ -85,7 +101,7 @@ template: `
 </template>
 `,
   data() {
-    return {
+    return { //Variables
       mensajeResultado: "¡Lanza los dados para comenzar!",
       saldo: 100,
       apuesta: 1,
@@ -95,28 +111,28 @@ template: `
     };
   },
   methods: {
-    dadoEmoji(valor) {
-      const emojis = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'];
-      return emojis[valor - 1];
+    dadoEmoji(valor) { // Método para convertir el valor del dado en un emoji
+      const emojis = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅']; // Array de emojis para los dados
+      return emojis[valor - 1]; // Devolvemos el emoji correspondiente al valor del dado
     },
-    lanzarDados() {
-      if (this.lanzando) return;
+    lanzarDados() { // Método para lanzar los dados
+      if (this.lanzando) return; //si ya está lanzando, no hacer nada
       
-      if (this.saldo < this.apuesta) {
+      if (this.saldo < this.apuesta) { // Comprobar si hay suficiente saldo
         this.mostrarMensaje("No tienes suficiente saldo", false);
         return;
       }
-
+      //si hay saldo, lanzar dados
       this.lanzando = true;
       this.saldo -= this.apuesta;
       
-      // Simulación visual de lanzamiento
+      // Simulación visual de lanzamiento, cambiados los datos cada 100ms
       const intervalId = setInterval(() => {
         this.dados = this.dados.map(() => this.generarDadoAleatorio());
       }, 100);
       
       // Detener el lanzamiento después de un tiempo
-      setTimeout(() => {
+      setTimeout(() => { 
         clearInterval(intervalId);
         
         // Generar resultado final
@@ -127,11 +143,14 @@ template: `
         
         this.calcularGanancia();
         this.lanzando = false;
-      }, 1500);
+      }, 1500); 
     },
+    // Método para generar un número aleatorio entre 1 y 6
     generarDadoAleatorio() {
       return Math.floor(Math.random() * 6) + 1;
     },
+    // Método para calcular la ganancia
+    // Comprobamos si los dados son iguales y calculamos la ganancia
     calcularGanancia() {
       const [d1, d2] = this.dados;
       let ganancia = 0;
@@ -142,42 +161,36 @@ template: `
         if (d1 === 6) {
           ganancia = this.apuesta * 10;
           this.mostrarMensaje(`¡Doble 6! Ganaste ${ganancia}€`, true);
-        } else {
-          // Cualquier otro par
+        } else if (d1 > 3) {
+          // Par y mayor que 3
           ganancia = this.apuesta * 5;
-          this.mostrarMensaje(`¡Trío! Ganaste ${ganancia}€`, true);
+          this.mostrarMensaje(`Par y mayor que 3! Ganaste ${ganancia}€`, true);
         }
       } else {
         this.mostrarMensaje("Inténtalo de nuevo", false);
       }
-      
+      // Actualizar el saldo
       this.saldo += ganancia;
       
-      // Comprobar si el saldo es 0
-      if (this.saldo === 0) {
-        setTimeout(() => {
-          if (confirm('¡Te has quedado sin saldo! ¿Quieres recargar 100€?')) {
-            this.saldo = 100;
-          }
-        }, 500);
-      }
-    },
-    cambiarApuesta(cambio) {
-      if (this.lanzando) return;
       
+    },
+    cambiarApuesta(cambio) { // Método para cambiar la apuesta
+      // Comprobar si ya está lanzando
+      if (this.lanzando) return;
+      // Cambiar la apuesta, asegurando que esté entre 1 y 10 
       const nuevaApuesta = this.apuesta + cambio;
       if (nuevaApuesta >= 1 && nuevaApuesta <= 10) {
         this.apuesta = nuevaApuesta;
       }
     },
-    mostrarMensaje(mensaje, esGanador) {
+    mostrarMensaje(mensaje, esGanador) { // Método para mostrar mensajes
       this.mensajeResultado = mensaje;
       this.esGanador = esGanador;
     }
   }
 });
 
-// Asegúrate de que el elemento con id "app" existe antes de montar la aplicación
+// Montar la app en el html
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('app2')) {
         app.mount("#app2");

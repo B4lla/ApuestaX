@@ -2,6 +2,22 @@ const { createApp } = Vue;
 
 const app = createApp({
 template: `
+    <!-- Estructura HTML -->
+        <div class="min-h-screen bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex flex-col">
+            <!-- Barra de Navegación -->
+            <nav class="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-md p-4 border-b border-gray-800 flex items-center justify-between z-50">
+                <div class="flex items-center">
+                    <div class="bg-yellow-500 w-8 h-8 flex items-center justify-center rounded">
+                        <span class="text-black font-bold">C</span>
+                    </div>
+                    <span class="ml-2 font-bold text-xl">CardVerse</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="text-gray-300 hover:text-white text-sm">Iniciar Sesión</button>
+                    <button class="bg-yellow-500 hover:bg-yellow-600 text-black font-medium px-4 py-1 rounded text-sm">Registrarse</button>
+                </div>
+            </nav>
+  <!-- Alineación del contenido -->
   <div class="min-h-screen bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex flex-col items-center justify-center p-4">
     <div class="bg-black bg-opacity-50 backdrop-blur-md rounded-lg p-4 w-full max-w-sm">
       <h1 class="text-xl font-bold text-center mb-3">Ruleta Simple</h1>
@@ -37,19 +53,17 @@ template: `
           </div>
 
           <!-- Número ganador -->
-          <div class="absolute inset-0 flex items-center justify-center z-10">
+          <div class="absolute inset-0 flex items-center justify-center z-  10">
             <div class="w-20 h-20 rounded-full bg-gray-800 flex items-center justify-center">
               <div v-if="!girando && numeroGanador !== null"
                    class="text-3xl font-bold"
-                   :class="esRojo(numeroGanador) ? 'text-red-500' : numeroGanador === 0 ? 'text-green-500' : 'text-white'">
+                   :class="esRojo(numeroGanador) ? 'text-red-500' : 'text-black'">
                 {{ numeroGanador }}
               </div>
               <div v-else class="text-3xl font-bold text-white">?</div>
             </div>
           </div>
 
-          <!-- Marcador fijo -->
-          <div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full w-0 h-0 border-l-8 border-r-8 border-b-8 border-transparent border-b-yellow-500 z-30"></div>
         </div>
       </div>
 
@@ -128,7 +142,7 @@ template: `
   </div>
 `,
   data() {
-    return {
+    return { // Variables
       mensajeResultado: "Selecciona tu apuesta",
       saldo: 100,
       apuesta: 1,
@@ -140,7 +154,7 @@ template: `
     };
   },
   computed: {
-    ruletaStyle() {
+    ruletaStyle() { //Realiza la rotación de la ruleta
       return {
         transform: `rotate(${this.anguloFinal}deg)`,
         transition: this.girando ? 'transform 2s cubic-bezier(0.5, 0, 0.5, 1)' : ''
@@ -149,68 +163,60 @@ template: `
   },
   
   methods: {
-    esRojo(numero) {
-      const numerosRojos = [1, 3, 5, 7, 9];
+    esRojo(numero) { // Determina si el número es rojo
+      const numerosRojos = [1, 4, 5, 8, 10];
       return numerosRojos.includes(numero); // Solo 10 sectores simplificados
     },
-    seleccionarTipoApuesta(tipo) {
+    seleccionarTipoApuesta(tipo) { // Selecciona el tipo de apuesta
       if (this.girando) return;
       this.tipoApuestaSeleccionada = tipo;
-      this.mensajeResultado = `Has seleccionado: ${this.getTipoApuestaTexto(tipo)}`;
       this.esGanador = false;
     },
-    getTipoApuestaTexto(tipo) {
-      const textos = {
-        rojo: "Rojo",
-        negro: "Negro",
-        par: "Par",
-        impar: "Impar"
-      };
-      return textos[tipo] || tipo;
-    },
-    girarRuleta() {
-      if (this.girando || !this.tipoApuestaSeleccionada) return;
-      if (this.saldo < this.apuesta) {
+    girarRuleta() { //Método para girar la ruleta
+      if (this.girando || !this.tipoApuestaSeleccionada) return; // Evita girar si ya está girando o no hay apuesta seleccionada
+      if (this.saldo < this.apuesta) { // Comprobar si hay suficiente saldo
         this.mostrarMensaje("No tienes saldo suficiente", false);
         return;
       }
-
+      // Si hay saldo, iniciar el giro
       this.girando = true;
       this.mensajeResultado = null;
       this.saldo -= this.apuesta;
       this.numeroGanador = null;
 
       // Simular número ganador entre 0 y 9 (10 sectores)
-      const numero = Math.floor(Math.random() * 10);
+      const numero = Math.floor(Math.random() * 10) + 1;
       this.numeroGanador = numero;
-
+      // Calcular el ángulo final
+      // 10 sectores, cada uno ocupa 36 grados (360/10)
       const anguloPorSector = 36;
       const vueltas = 5;
       this.anguloFinal += (vueltas * 360) + ((10 - numero) * anguloPorSector);
 
-      setTimeout(() => {
-        this.calcularGanancia();
-        this.girando = false;
+      setTimeout(() => { // Esperar a que termine el giro
+        this.calcularGanancia(); // Calcular ganancia
+        this.girando = false; // Terminar el giro
       }, 2000);
     },
-    calcularGanancia() {
-      let gano = false;
+    calcularGanancia() { // Método para calcular la ganancia
+      let gano = false; // Variable para determinar si he ganado
       let multiplicador = 0;
 
-      const esRojo = this.esRojo(this.numeroGanador);
-      const esPar = this.numeroGanador !== 0 && this.numeroGanador % 2 === 0;
+      const esRojo = this.esRojo(this.numeroGanador); // Determina si el número es rojo
+      const esPar = this.numeroGanador % 2 === 0; // Determina si el número es par
 
+      // Comprobar si la apuesta es ganadora
       if (this.tipoApuestaSeleccionada === 'rojo' && esRojo) {
         gano = true;
-      } else if (this.tipoApuestaSeleccionada === 'negro' && !esRojo && this.numeroGanador !== 0) {
+      } else if (this.tipoApuestaSeleccionada === 'negro' && !esRojo) {
         gano = true;
       } else if (this.tipoApuestaSeleccionada === 'par' && esPar) {
         gano = true;
-      } else if (this.tipoApuestaSeleccionada === 'impar' && !esPar && this.numeroGanador !== 0) {
+      } else if (this.tipoApuestaSeleccionada === 'impar' && !esPar) {
         gano = true;
       }
 
-      if (gano) {
+      if (gano) { //Si gana el usuario se le suma y se muestra un mensaje
         const ganancia = this.apuesta * 2;
         this.saldo += ganancia;
         this.mostrarMensaje(`¡Ganaste ${ganancia}€! (${this.numeroGanador})`, true);
@@ -218,33 +224,27 @@ template: `
         this.mostrarMensaje(`Perdiste. Salió ${this.numeroGanador}`, false);
       }
 
-      if (this.saldo === 0) {
-        setTimeout(() => {
-          if (confirm("Te has quedado sin saldo. ¿Recargar 100€?")) {
-            this.saldo = 100;
-          }
-        }, 500);
-      }
     },
-    cambiarApuesta(cambio) {
-      if (this.girando) return;
+    //Metodo para cambiar la apuesta
+    cambiarApuesta(cambio) { 
+      if (this.girando) return; //Si esta girando que no se pueda cambiar
       const nuevaApuesta = this.apuesta + cambio;
       if (nuevaApuesta >= 1 && nuevaApuesta <= 10) {
         this.apuesta = nuevaApuesta;
       }
     },
-    mostrarMensaje(mensaje, esGanador) {
+    mostrarMensaje(mensaje, esGanador) { //Metodo para mostrar mensajes
       this.mensajeResultado = mensaje;
       this.esGanador = esGanador;
     }
   }
 });
 
-// Asegúrate de que el elemento con id "app" existe antes de montar la aplicación
+// Montar la app en el html
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('app3')) {
         app.mount("#app3");
     } else {
-        console.error("No se encontró el elemento con id 'app2'");
+        console.error("No se encontró el elemento con id 'app3'");
     }
 });

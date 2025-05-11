@@ -2,6 +2,7 @@ const { createApp } = Vue;
 
 const app = createApp({
     template: `
+        <!-- Estructura HTML -->
         <div class="min-h-screen bg-gradient-to-br from-yellow-500 to-amber-600 text-white flex flex-col">
             <!-- Barra de Navegación -->
             <nav class="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-md p-4 border-b border-gray-800 flex items-center justify-between z-50">
@@ -159,6 +160,7 @@ const app = createApp({
         </div>
     `,
     data() {
+        // Inicializa las variables de la app
         return {
             mensajeResultado: null,
             saldo: 100,
@@ -170,21 +172,24 @@ const app = createApp({
             simbolos: ["🍒", "🍋", "🍊", "🍇", "💎", "7️⃣", "🎰"]
         };
     },
+    // Métodos de la app
     methods: {
+        // Genera un símbolo aleatorio para los rodillos
+        // y lo asigna a cada rodillo
         girarRodillos() {
-            if (this.girando) return;
+            if (this.girando) return; // Si ya está girando no se puede girar de nuevo
             
-            if (this.saldo < this.apuesta) {
+            if (this.saldo < this.apuesta) { // Si no hay suficiente saldo
                 this.mostrarMensaje("No tienes suficiente saldo para realizar esta apuesta.", false);
                 return;
             }
-
+            // Si hay saldo, comienza el giro
             this.girando = true;
             this.mensajeResultado = null;
             this.saldo -= this.apuesta;
             this.ganancia = 0;
             
-            // Simulación visual de giro
+            // Simulación visual de giro, es decir, cambia los símbolos cada 100ms
             const intervalId = setInterval(() => {
                 this.rodillos = this.rodillos.map(() => this.generarSimboloAleatorio());
             }, 100);
@@ -205,15 +210,18 @@ const app = createApp({
                 this.girando = false;
             }, 2000);
         },
+        // Genera un símbolo aleatorio de la lista de símbolos y lo devuelve
         generarSimboloAleatorio() {
             const indice = Math.floor(Math.random() * this.simbolos.length);
             return this.simbolos[indice];
         },
+        // Calcula la ganancia en función de los símbolos obtenidos
+        // y actualiza el saldo
         calcularGanancia() {
             const [r1, r2, r3] = this.rodillos;
             
-            if (r1 === r2 && r2 === r3) {
-                const premios = {
+            if (r1 === r2 && r2 === r3) { //si hay 3 iguales hay premio
+                const premios = { //tabla con el valor del multiplicador cada premio
                     "🍒": 3,
                     "🍋": 5,
                     "🍊": 10,
@@ -223,16 +231,16 @@ const app = createApp({
                     "🎰": 100
                 };
                 
-                const multiplicador = premios[r1] || 0;
-                this.ganancia = this.apuesta * multiplicador;
-                this.saldo += this.ganancia;
+                const multiplicador = premios[r1]; //multiplicador del premio
+                this.ganancia = this.apuesta * multiplicador; //La ganancia
+                this.saldo += this.ganancia; //se suma al saldo
                 this.mostrarMensaje(`¡Felicidades! Has ganado ${this.ganancia}€ (x${multiplicador})`, true);
-            } else if (this.esCombinacionFrutas(r1, r2, r3)) {
+            } else if (this.esCombinacionFrutas(r1, r2, r3)) { //si hay combinación de frutas
                 // Combinación de frutas diferentes
                 this.ganancia = this.apuesta * 2;
                 this.saldo += this.ganancia;
                 this.mostrarMensaje(`¡Combinación de frutas! Has ganado ${this.ganancia}€ (x2)`, true);
-            } else {
+            } else { //si no hay premio
                 this.ganancia = 0;
                 this.mostrarMensaje("Inténtalo de nuevo", false);
             }
@@ -252,29 +260,33 @@ const app = createApp({
             return frutas.includes(s1) && frutas.includes(s2) && frutas.includes(s3) && 
                    !(s1 === s2 && s2 === s3);
         },
+        // Cambia la apuesta en función del botón presionado
         cambiarApuesta(cambio) {
-            if (this.girando) return;
+            if (this.girando) return; //Si está girando no se puede cambiar la apuesta
             
             const nuevaApuesta = this.apuesta + cambio;
             if (nuevaApuesta >= 1 && nuevaApuesta <= 10) {
                 this.apuesta = nuevaApuesta;
             }
         },
+        // Cambia la apuesta a 10 si el saldo es suficiente
+        // y no está girando
         apostarMaximo() {
             if (this.girando || this.saldo < 10) return;
             this.apuesta = 10;
         },
+        //cambia el mensaje de resultado según los datos que recibe
         mostrarMensaje(mensaje, esGanador) {
             this.mensajeResultado = mensaje;
             this.esGanador = esGanador;
         }
     },
-    mounted() {
+    mounted() { //Mensaje que aparece en la app al cargar y luego se sustituye
         this.mensajeResultado = "¡Haz girar los rodillos para comenzar!";
     }
 });
 
-// Asegúrate de que el elemento con id "app" existe antes de montar la aplicación
+// Esto monta la app en el html
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('app1')) {
         app.mount("#app1");
